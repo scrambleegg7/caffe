@@ -249,7 +249,9 @@ class AlzheimerClass(object):
         
         print "-- confirm image size:", testimage.shape
         print " (testimage) max min avg.:", np.max(testimage),np.min(testimage),np.mean(testimage)
-        testimage /= 255.0     
+        # testimage /= 255.0     
+        testimage *= 255.0/testimage.max()     
+
         print " (testimage) max min avg.:", np.max(testimage),np.min(testimage),np.mean(testimage)
 
         h,w = testimage.shape
@@ -257,6 +259,11 @@ class AlzheimerClass(object):
         
         X = np.zeros((h,w,3))
         X[:,:,0] = testimage[:,:,0]
+        
+        # change BGR 
+        print " ** change BGR ** "
+        X = X[:,:,::-1]
+        
         
         #print X[:,:,0]
         

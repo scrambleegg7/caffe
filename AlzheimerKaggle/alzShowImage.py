@@ -76,8 +76,8 @@ def readTest3chImage():
     
     im0 = im[:,:,0]
     print " (testimage) max min avg.:", np.max(im0),np.min(im0),np.mean(im0)
-    im = im[:,:,1]
-    print " (testimage) max min avg.:", np.max(im),np.min(im),np.mean(im)
+    im1 = im[:,:,1]
+    print " (testimage) max min avg.:", np.max(im1),np.min(im1),np.mean(im1)
     im2 = im[:,:,2]
     print " (testimage) max min avg.:", np.max(im2),np.min(im2),np.mean(im2)
     
