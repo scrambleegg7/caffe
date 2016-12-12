@@ -1,0 +1,1 @@
+/Users/donchan/Documents/myData/KaggleData/Alzheimer/alz_train_lmdb

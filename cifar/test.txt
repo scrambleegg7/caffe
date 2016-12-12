@@ -1,0 +1,1 @@
+/Users/donchan/Documents/Statistical_Mechanics/caffe/cifar/test.h5
