@@ -32,14 +32,17 @@ def read_lmdb(lmdb_file):
 
         print "-- im shape", im.shape, im.ndim
         # for colored
-        #im = np.transpose(im, (2, 1)) # original (dim, col, row)
-        im = im[0,:,:]
+        im = np.transpose(im, (1,2,0)) # original (dim, col, row)
+        #im = im[0,:,:]
+        im = im[:,:,::-1]
         print "-- im shape after change .... ", im.shape, im.ndim
 
 
         print "label ", label
 
-        plt.imshow(im,cmap='gray',  interpolation='nearest')
+        #plt.imshow(im,cmap='gray',  interpolation='nearest')
+        plt.imshow(im)
+                
         plt.show()
 
         idx += 1

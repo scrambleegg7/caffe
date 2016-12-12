@@ -248,11 +248,11 @@ class AlzheimerClass(object):
         
         
         print "-- confirm image size:", testimage.shape
-        print " (testimage) max min avg.:", np.max(testimage),np.min(testimage),np.mean(testimage)
+        print " (testimage) max min avg.: ", np.max(testimage),np.min(testimage),np.mean(testimage)
         # testimage /= 255.0     
         testimage *= 255.0/testimage.max()     
 
-        print " (testimage) max min avg.:", np.max(testimage),np.min(testimage),np.mean(testimage)
+        print " (testimage) max min avg.: ", np.max(testimage),np.min(testimage),np.mean(testimage)
 
         h,w = testimage.shape
         testimage = testimage.reshape(h,w,1)
@@ -280,11 +280,12 @@ class AlzheimerClass(object):
         print "** file saved on ..", output_file
 
 
-    def makeImagelistFile(self,toprank=10000,testsize=0.3):
+    def makeImagelistFile(self,toprank=10000,testsize=0.3,channel=1):
         
         alzimages = self.images.copy()
         l, h, w = alzimages.shape
-
+        
+        print "***** color mode -- 3 channel is used to save image ******"
         print "\n** step1 ** -- extracting randomly training data --\n"
         n = np.random.permutation(l)
         
@@ -351,7 +352,17 @@ class AlzheimerClass(object):
                 #print "remove file if exists ......... "
             #    os.remove(output_file)            
             #except OSError:
-            #    pass            
+            #    pass       
+
+            if channel == 3:
+                train1 = train.reshape(h,w,1)
+                train3 = np.zeros((h,w,3))
+                train3[:,:,0] = train1[:,:,0]
+                # change BGR 
+                train = train3[:,:,::-1]
+
+            # if channel 1,  black and white 
+            # if channel 3,  color mode but saved only 1 chaanel      
             cv2.imwrite(output_file, train)
             
         print "-- all %d training images has been saved....." % (idx+1)
@@ -433,7 +444,14 @@ class AlzheimerClass(object):
                 #print "remove file if exists ......... "
             #    os.remove(output_file)            
             #except OSError:
-            #    pass            
+            #    pass        
+            if channel == 3:
+                train1 = train.reshape(h,w,1)
+                train3 = np.zeros((h,w,3))
+                train3[:,:,0] = train1[:,:,0]
+                # change BGR 
+                train = train3[:,:,::-1]
+
             cv2.imwrite(output_file, train)
             
         print "-- all %d test (valid) images has been saved....." % (idx+1)
