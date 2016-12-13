@@ -13,25 +13,26 @@ import matplotlib.pyplot as plt
 
 
 
-def plot_gallary(images):
+def plot_gallary(images,labels):
     
-    plt.figure(  figsize = (4,3))
+    plt.figure(  figsize = (8,6))
 
     plt.suptitle("Alzheimer desease MRI:",size=14)
+    plt.suptitle(labels[0])
     
     
-    for i, comp in enumerate(images):
-        plt.subplot(4,3,i+1)
+    for i, (comp,label) in enumerate(    zip(images,labels)   ):
+        plt.subplot(8,8,i+1)
         #print comp.shape
         plt.imshow(comp, cmap='Greys',  interpolation='nearest')
-        print "-- max / min of image : ", np.max(comp),np.min(comp)
+        #print "-- max / min of image : ", np.max(comp),np.min(comp)
         
         plt.xticks(())
         plt.yticks(())
-    plt.subplots_adjust(.01, .05, .99, .93, .04, 0.)
+        
+    plt.subplots_adjust(left=None, bottom=None, right=None, top=None, wspace=0.001, hspace=0)    
     plt.show()
     
-
 
 def readH5Data():
     
@@ -114,7 +115,18 @@ def main():
     # tdir = "/Users/donchan/Downloads/NNData/iris_caffe/"
     #readH5Data()
     #  readImage()
-    readTest3chImage()
+    #readTest3chImage()
+    
+    #
+    
+    alzCls = AlzheimerClass(None,True)
+    images = alzCls.getImages()
+    labels = alzCls.getLables()
+    
+    myimages = images[:62]
+    mylabels = labels[:62]
+    
+    plot_gallary(myimages,mylabels)
     
 
 if __name__ == "__main__":
