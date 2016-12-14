@@ -133,6 +133,8 @@ class envParamAlz(envParam):
         self.envlist['solver'] = 'alz_quick_solver.prototxt'
         
         self.envlist['caffe_root']='/Users/donchan/Documents/myData/KaggleData/Alzheimer'
+
+        self.envlist['caffe-public_root']='/Users/donchan/caffe/caffe-public'
         
         self.envlist['rootdir']='/Users/donchan/Documents/myData/KaggleData/Alzheimer'
         self.envlist['datadir']='/Users/donchan/Documents/myData/KaggleData/Alzheimer' 
