@@ -99,11 +99,13 @@ def readImage():
     traindir = myenv.envlist['datadir'] + '/alz_train_images'  
 
     filelists = os.listdir(traindir)
-    for efilename in filelists[:10]:
+    for efilename in filelists[:5]:
         item=os.path.join(traindir,efilename)
         im = plt.imread(item)
+        print "-- shape of image :" , im.shape
         plt.title(efilename)
-        plt.imshow(im,cmap='Greys',  interpolation='nearest')
+        #plt.imshow(im,cmap='Greys',  interpolation='nearest')
+        plt.imshow(im)
         plt.show()
       
 
@@ -114,11 +116,11 @@ def main():
     '''
     # tdir = "/Users/donchan/Downloads/NNData/iris_caffe/"
     #readH5Data()
-    #  readImage()
+    readImage()
     #readTest3chImage()
     
     #
-    
+    """
     alzCls = AlzheimerClass(None,True)
     images = alzCls.getImages()
     labels = alzCls.getLables()
@@ -127,7 +129,7 @@ def main():
     mylabels = labels[:62]
     
     plot_gallary(myimages,mylabels)
-    
+    """
 
 if __name__ == "__main__":
     main()

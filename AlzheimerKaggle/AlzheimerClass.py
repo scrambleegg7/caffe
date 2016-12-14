@@ -362,8 +362,12 @@ class AlzheimerClass(object):
                 train = train3[:,:,::-1]
 
             # if channel 1,  black and white 
-            # if channel 3,  color mode but saved only 1 chaanel      
-            cv2.imwrite(output_file, train)
+            # if channel 3,  color mode but saved only 1 chaanel
+
+            size_ = (227,227)
+            train_ = cv2.resize(train,size_)
+      
+            cv2.imwrite(output_file, train_)
             
         print "-- all %d training images has been saved....." % (idx+1)
         print "-- writing time (for your ref.)  :  %.4f sec.... " % (time() - t0)
@@ -452,7 +456,10 @@ class AlzheimerClass(object):
                 # change BGR 
                 train = train3[:,:,::-1]
 
-            cv2.imwrite(output_file, train)
+    
+            size_ = (227,227)
+            train_ = cv2.resize(train,size_)      
+            cv2.imwrite(output_file, train_)
             
         print "-- all %d test (valid) images has been saved....." % (idx+1)
         print "-- writing time :  %.4f sec.... " % (time() - t0)
@@ -463,7 +470,6 @@ class AlzheimerClass(object):
         writer = csv.writer(f,delimiter='\t')
         writer.writerows(training)
         print "-- test (valid) image txt file  has been saved on ....." , outfile
-
     
     def makeH5Data(self,toprank=10000):
         
