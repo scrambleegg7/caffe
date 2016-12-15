@@ -364,6 +364,7 @@ class AlzheimerClass(object):
             # if channel 1,  black and white 
             # if channel 3,  color mode but saved only 1 chaanel
 
+            # size expand to 227
             size_ = (227,227)
             train_ = cv2.resize(train,size_)
       
@@ -456,7 +457,7 @@ class AlzheimerClass(object):
                 # change BGR 
                 train = train3[:,:,::-1]
 
-    
+            # size expand 227    
             size_ = (227,227)
             train_ = cv2.resize(train,size_)      
             cv2.imwrite(output_file, train_)

@@ -20,15 +20,14 @@ from caffeBase.envParam import envParamAlz
 
 import platform as pl
 
-from time import time
+#from time import time
 
 import caffe
 
-from AlzheimerClass import AlzheimerClass
+#from AlzheimerClass import AlzheimerClass
 
 from caffe import layers as L
 from caffe import params as P
-
 
 class AlzFineTuneClass(object):
 
@@ -48,6 +47,10 @@ class AlzFineTuneClass(object):
         self.setInitialParams()
         self.setImageSetLabels()
         self.weightsFile = self.setupWeights()
+        
+    def getBvlcRefWeights(self):
+        
+        return self.weightsFile
         
         
     def setInitialParams(self):
@@ -187,7 +190,7 @@ class AlzFineTuneClass(object):
         
         return f.name
         
-    def alz_net(self,train=True, learn_all=False, subset=None):
+    def alz_net(self,train=True, learn_all=False, subset=None,filename=None):
 
         if subset is None:
             subset = 'train' if train else 'test'
@@ -206,13 +209,19 @@ class AlzFineTuneClass(object):
         
         style_data, style_label = L.ImageData(
             transform_param=transform_param, source=source,
-            batch_size=50, new_height=256, new_width=256, ntop=2)
+            batch_size=62, new_height=256, new_width=256, ntop=2)
         
-        # num style is changed to 3 
+        # num style is changed to 3
+        
+        if filename == None:
+            filename_="alz_net.prototxt"
+        else:
+            filename_= filename
+            
         return self.caffenet(data=style_data, label=style_label, train=train,
                     num_classes=3,
                     classifier_name='fc8_flickr',
-                    learn_all=learn_all,filename="alz_net.prototxt")
+                    learn_all=learn_all,filename=filename_)
     
     
     def untrained(self):
@@ -222,6 +231,10 @@ class AlzFineTuneClass(object):
         train is set to false......
         for untraining ...
         
+        
+            learn_all = False = Frozen 
+            lr_mult = 0.0  except fc8 
+            
             fc7input = n.relu6
             fc8input = n.relu7
             
