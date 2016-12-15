@@ -93,7 +93,7 @@ def prediction(alzFineCls):
 
 def main():
     
-#    recreateAlzNetTxt()
+    #recreateAlzNetTxt()
     #proc1()
     #untrained()
     alzFineCls = AlzFineTuneClass()

@@ -44,6 +44,10 @@ class AlzFineTuneClass(object):
 
         self.caffe_root = self.env.envlist['caffe_root']
         
+        #
+        # local settings for AlzFineTuneClass
+        #
+        
         self.setInitialParams()
         self.setImageSetLabels()
         self.weightsFile = self.setupWeights()

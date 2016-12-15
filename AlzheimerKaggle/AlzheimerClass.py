@@ -128,7 +128,7 @@ class AlzheimerClass(object):
     def alzImageData(self):
     
         # trainign directory index
-        training_idx = range(1,2)
+        training_idx = range(1,7)
 
         myDirCls = myDirClass()
         

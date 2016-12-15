@@ -1,16 +1,38 @@
 # -*- coding: utf-8 -*-
 
+
+"""
+
+   initialize environment parameters 
+   a special directory setting is loaded based on class...
+   
+   
+"""
+
+
 import numpy as np
 import os
 
+import platform as pl
         
 
 class envParam(object):
     
     def __init__(self):
+
         self.flag = False
-        
         self.envlist = {}
+
+        if pl.system() == "Linux":
+            self.home = "/home/hideaki/SynologyNFS/myProgram/pythonProj"
+            self.myDataDir = self.home
+            self.envlist['caffe-public_root'] = '/home/hideaki/cafferoot/caffe'
+
+        else:    
+            self.home = "/Users/donchan/Documents"
+            self.myDataDir = os.path.join(self.home,"mydata")
+            self.envlist['caffe-public_root'] = '/Users/donchan/caffe/caffe-public'
+        
         self.setEnv()
         
         self.setCaffemodel()
@@ -128,16 +150,18 @@ class envParamAlz(envParam):
 
     def setEnv(self):
         
+        
+        
         #self.envlist['caffe_root']='/Users/donchan/Documents/Statistical_Mechanics/caffe/alz'
         self.envlist['caffe_model'] = 'caffenet_train_iter_2000.caffemodel'
         self.envlist['solver'] = 'alz_quick_solver.prototxt'
         
-        self.envlist['caffe_root']='/Users/donchan/Documents/myData/KaggleData/Alzheimer'
-
-        self.envlist['caffe-public_root']='/Users/donchan/caffe/caffe-public'
         
-        self.envlist['rootdir']='/Users/donchan/Documents/myData/KaggleData/Alzheimer'
-        self.envlist['datadir']='/Users/donchan/Documents/myData/KaggleData/Alzheimer' 
+        self.envlist['caffe_root']= os.path.join(self.myDataDir,'KaggleData/Alzheimer')
+
+        
+        self.envlist['rootdir'] = os.path.join(self.myDataDir,'KaggleData/Alzheimer')
+        self.envlist['datadir'] = os.path.join(self.myDataDir,'KaggleData/Alzheimer') 
         self.envlist['train_txt'] = 'train.txt'
         self.envlist['test_txt'] = 'test.txt'
         self.envlist['train'] = 'alz_train_test.prototxt'
