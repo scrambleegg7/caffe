@@ -21,6 +21,9 @@ from caffeBase.envParam import envParamAlz
 from AlzFineTuneClass import AlzFineTuneClass
 
 
+import platform as pl
+
+
 def recreateAlzNetTxt():
     
     rootdir = envParamAlz().envlist['datadir']
@@ -40,9 +43,14 @@ def recreateAlzNetTxt():
     
     print "-- open train.txt under finetune "
     newoutfile = os.path.join(rootdir, "finetune/train.txt")    
-    f = open(newoutfile,'w')
+    f = open(newoutfile,'wb')
 
-    writer = csv.writer(f,delimiter='\t')
+
+    if pl.system() == "Linux":
+        writer = csv.writer(f,lineterminator='\n',delimiter=' ')
+    else:
+        writer = csv.writer(f,delimiter='\t')
+        
     writer.writerows(newdatalist)
 
 
@@ -93,7 +101,7 @@ def prediction(alzFineCls):
 
 def main():
     
-    #recreateAlzNetTxt()
+    recreateAlzNetTxt()
     #proc1()
     #untrained()
     alzFineCls = AlzFineTuneClass()
