@@ -22,7 +22,7 @@ display: 100
 max_iter: 2000
 # snapshot intermediate results
 snapshot: 500
-snapshot_prefix: "/Users/donchan/Documents/myData/KaggleData/Alzheimer/snapshot/alz_quick_snapshot"
+snapshot_prefix: "/home/hideaki/SynologyNFS/KaggleData/Alzheimer/finetune/snapshot/alz_quick_snapshot"
 # solver mode: CPU or GPU
-solver_mode: CPU
+solver_mode: GPU
 #device_id: 0

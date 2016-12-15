@@ -376,7 +376,13 @@ class AlzheimerClass(object):
         rootdir = self.env.envlist['datadir']
         outfile = os.path.join(rootdir, "train_alzheimer_mri.dat")
         f = open(outfile,'w')
-        writer = csv.writer(f,delimiter='\t')
+
+        if pl.system() == "Linux":
+            writer = csv.writer(f,lineterminator='\n',delimiter=' ')
+        else:
+            writer = csv.writer(f,delimiter='\t')
+
+
         writer.writerows(training)
         print "-- training image txt file  has been saved on ....." , outfile
         
@@ -468,7 +474,12 @@ class AlzheimerClass(object):
         rootdir = self.env.envlist['datadir']
         outfile = os.path.join(rootdir, "test_alzheimer_mri.dat")
         f = open(outfile,'w')
-        writer = csv.writer(f,delimiter='\t')
+
+        if pl.system() == "Linux":
+            writer = csv.writer(f,lineterminator='\n',delimiter=' ')
+        else:
+            writer = csv.writer(f,delimiter='\t')
+        
         writer.writerows(training)
         print "-- test (valid) image txt file  has been saved on ....." , outfile
     
