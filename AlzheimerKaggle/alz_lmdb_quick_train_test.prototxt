@@ -1,32 +1,44 @@
 name: "Alznet"
 layer {
   name: "Alz"
-  type: "Data"
+  type: "ImageData"
   top: "data"
   top: "label"
   include {
     phase: TRAIN
   }
-  data_param {
-    source: "/Users/donchan/Documents/myData/KaggleData/Alzheimer/alz_train_lmdb"
-    backend: LMDB
+image_data_param {
+    source: "/home/hideaki/SynologyNFS/myProgram/pythonProj/KaggleData/Alzheimer/finetune/train.txt"
     batch_size: 31
+    new_height: 256
+    new_width: 256
   }
+  #data_param {
+  #  source: "/home/hideaki/SynologyNFS/myProgram/pythonProj/KaggleData/Alzheimer/alz_train_lmdb"
+  #  backend: LMDB
+  #  batch_size: 31
+  #}
 }
 layer {
   name: "Alz"
-  type: "Data"
+  type: "ImageData"
   top: "data"
   top: "label"
   include {
     phase: TEST
   }
-  data_param {
-    source: "/Users/donchan/Documents/myData/KaggleData/Alzheimer/alz_test_lmdb"
-    #  source: "/Users/donchan/Documents/myData/KaggleData/Alzheimer/alz_train_lmdb"
-    backend: LMDB
+
+image_data_param {
+    source: "/home/hideaki/SynologyNFS/myProgram/pythonProj/KaggleData/Alzheimer/finetune/test.txt"
     batch_size: 31
+    new_height: 256
+    new_width: 256
   }
+  #data_param {
+  #  source: "/home/hideaki/SynologyNFS/myProgram/pythonProj/KaggleData/Alzheimer/alz_test_lmdb"
+  #  backend: LMDB
+  #  batch_size: 31
+  #}
 
 }
 layer {

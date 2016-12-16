@@ -9,7 +9,7 @@ layer {
   }
   hdf5_data_param {
     source: "train.txt"
-    batch_size: 62
+    batch_size: 31
   }
 }
 layer {
@@ -22,7 +22,7 @@ layer {
   }
   hdf5_data_param {
     source: "test.txt"
-    batch_size: 62
+    batch_size: 31
   }
 
 }

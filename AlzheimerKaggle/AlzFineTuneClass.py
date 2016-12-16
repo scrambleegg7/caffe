@@ -210,10 +210,18 @@ class AlzFineTuneClass(object):
 
         
         #transform_param = dict(mirror=train, crop_size=96,mean_file= mean_file)
-        
+        """
+           If GPU is used to process training,
+           it is an one of tips to reduce batch size.....
+           
+           other than reducing the size of image ......
+           
+           Buid Imagenet Layer
+           
+        """
         style_data, style_label = L.ImageData(
             transform_param=transform_param, source=source,
-            batch_size=62, new_height=256, new_width=256, ntop=2)
+            batch_size=31, new_height=256, new_width=256, ntop=2)
         
         # num style is changed to 3
         
