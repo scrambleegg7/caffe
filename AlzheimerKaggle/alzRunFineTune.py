@@ -44,6 +44,31 @@ def recreateAlzNetTxt():
 
     writer = csv.writer(f,delimiter='\t')
     writer.writerows(newdatalist)
+    
+    
+    outfile = os.path.join(rootdir, "test_alzheimer_mri.dat")
+
+    print "-- open test_alzheimer_mri.dat --"
+    f = open(outfile,'r')
+        
+    newdatalist = []
+    newdir = os.path.join(rootdir,'alz_test_images')
+    reader = csv.reader(f,delimiter='\t')
+    for row in reader:
+        filename = row[0]
+        newdatalist.append([ os.path.join(newdir, filename), row[1] ] )
+    
+    f.close()
+    
+    print "-- open test.txt under finetune "
+    newoutfile = os.path.join(rootdir, "finetune/test.txt")    
+    f = open(newoutfile,'w')
+
+    writer = csv.writer(f,delimiter='\t')
+    writer.writerows(newdatalist)
+    
+    
+    
 
 
 def untrained():
@@ -93,11 +118,11 @@ def prediction(alzFineCls):
 
 def main():
     
-#    recreateAlzNetTxt()
+    recreateAlzNetTxt()
     #proc1()
     #untrained()
-    alzFineCls = AlzFineTuneClass()
-    prediction(alzFineCls)
+    #alzFineCls = AlzFineTuneClass()
+    #prediction(alzFineCls)
 
 
 

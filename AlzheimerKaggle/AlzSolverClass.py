@@ -173,6 +173,35 @@ class AlzSolverClass(AlzBaseClass):
         train_loss, scratch_train_loss = loss['pretrained'], loss['scratch']
         train_acc, scratch_train_acc = acc['pretrained'], acc['scratch']
         style_weights, scratch_style_weights = weights['pretrained'], weights['scratch']
+    
+    
+    def eval_alzNet_acc(self):
+
+        train_path = self.alzFinetuneCls.alz_net(train=False,filename="non_train.prototxt")
+        
+        
+        weightslist = [ 'pretrained',  'scratch' ]
+        test_iters = 10
+        
+        for name in weightslist:
+            filename = 'weights.%s.caffemodel' % name
+        
+            weights = os.path.join(self.weight_dir, filename)
+
+            test_net = caffe.Net(train_path, weights, caffe.TEST)
+            
+            accuracy = 0
+            for it in xrange(test_iters):
+                accuracy += test_net.forward()['acc']
+            
+            accuracy /= test_iters
+    
+    
+            
+            print "weightname:%s  accuracy: %.4f" % (name,accuracy) 
+
+
+        
         
         
         
