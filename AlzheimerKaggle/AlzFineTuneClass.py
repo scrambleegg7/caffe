@@ -272,14 +272,21 @@ class AlzFineTuneClass(object):
                                 self.weightsFile, caffe.TEST)
         
         return untrained_style_net
+    
+    def test_net(self, weights,filename=None):
         
+        if filename == None:
+            filename = "test_net.prototxt"
+        
+        test_net_caffe = caffe.Net(self.alz_net(train=False,filename=filename),
+                               weights, caffe.TEST)
+        
+        return test_net_caffe
     
     def dummyImageSetNet(self):
         
-    
         #dummy_data = L.DummyData(shape=dict(dim=[1, 3, 96, 96]))
         dummy_data = L.DummyData(shape=dict(dim=[1, 3, 227, 227]))
-
 
         imagenet_net_filename = self.caffenet(data=dummy_data, train=False)
         #print imagenet_net_filename

@@ -6,7 +6,9 @@ from AlzSolverClass import AlzSolverClass
 def proc1():
     
     alzSolverCls = AlzSolverClass(test=True)
-    alzSolverCls.stepRunSolver()
+    #alzSolverCls.stepRunSolver()
+    
+    alzSolverCls.endToEndSolver()
 
 
 

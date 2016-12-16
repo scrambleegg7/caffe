@@ -139,18 +139,54 @@ class AlzSolverClass(AlzBaseClass):
             s.net.save(weights[name])
     
         return loss, acc, weights
+
+
+    def endToEndSolver(self):
+
+        baselr = 0.001
+
+        train_path = self.alzFinetuneCls.alz_net(train=True,learn_all=True,filename="train_learn_all.prototxt")
+        sfilename = "learn_all_solver.prototxt"        
+        solver_filename = self.createSolver(train_net_path=train_path,filename=sfilename,base_lr=baselr)
+        
+        style_solver = caffe.get_solver(solver_filename)
+        
+        weights_filename = "weights.pretrained.caffemodel"
+        weights = os.path.join(self.weight_dir,weights_filename)
+        style_solver.net.copy_from(weights)
+
+        """
+        scratched 
+        """        
+
+        scratch_style_solver = caffe.get_solver(solver_filename)
+        
+        weights_filename = "weights.scratch.caffemodel"
+        weights = os.path.join(self.weight_dir,weights_filename)
+        scratch_style_solver.net.copy_from(weights)
+
+
+        niter = 200
+        print 'Running solvers for %d iterations...' % niter
+
+        solvers = [('pretrained_endToEnd', style_solver),
+                   ('scratch_endToEnd', scratch_style_solver)]
+                                      
+        loss, acc, weights = self.run_solvers(niter, solvers)
+        print 'Done.'
+
     
     
     def stepRunSolver(self):
 
-        train_path = self.alzFinetuneCls.alz_net(train=True,filename="fulltrain.prototxt")
+        train_path = self.alzFinetuneCls.alz_net(train=True,filename="train_not_learn.prototxt")
         weights = self.alzFinetuneCls.getBvlcRefWeights()
+
 
         sfilename = "solver.prototxt"
         solver_filename = self.createSolver(train_net_path=train_path,filename=sfilename)
         
         style_solver = caffe.get_solver(solver_filename)
-        
         style_solver.net.copy_from(weights)
         
   

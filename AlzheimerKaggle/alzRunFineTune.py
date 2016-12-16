@@ -140,15 +140,38 @@ def prediction(alzFineCls):
     assert error < 1e-8   
     
     print "-- untrained_net fc7 vs imagenet_net fc7 layer difference:", error 
+
+
+def predictionAfterTrained(alzFineCls):
+
+
+    im,label = alzFineCls.untrained()
+    mindex = 2    
+    im = im[mindex]
+    label = label[mindex]
+
+        
+    imagenet_net = alzFineCls.dummyImageSetNet()
+    alzFineCls.disp_imagenet_preds(imagenet_net,im)
+
+    
+    weights = alzFineCls.env.envlist['datadir'] + '/finetune/weights.scratch_endToEnd.caffemodel'
+    
+    test_net = alzFineCls.test_net(weights)
+    alzFineCls.disp_alz_preds(test_net,im)
+    
+    print "---- correct label....", label
+    
     
 
 def main():
     
-    recreateAlzNetTxt()
+    #recreateAlzNetTxt()
     #proc1()
     #untrained()
     alzFineCls = AlzFineTuneClass()
-    prediction(alzFineCls)
+    predictionAfterTrained(alzFineCls)
+    #prediction(alzFineCls)
 
 
 
