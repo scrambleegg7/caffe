@@ -38,11 +38,9 @@ def recreateAlzNetTxt():
     
     
     if pl.system() == "Linux":
-        writer = csv.writer(f,lineterminator='\n',delimiter=' ')
+        reader = csv.reader(f,lineterminator='\n',delimiter=' ')
     else:
         reader = csv.reader(f,delimiter='\t')
-
-
 
     for row in reader:
         filename = row[0]
@@ -73,7 +71,7 @@ def recreateAlzNetTxt():
     
     
     if pl.system() == "Linux":
-        writer = csv.writer(f,lineterminator='\n',delimiter=' ')
+        reader = csv.reader(f,lineterminator='\n',delimiter=' ')
     else:
         reader = csv.reader(f,delimiter='\t')
 
