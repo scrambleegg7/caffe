@@ -27,6 +27,7 @@ import platform as pl
 def recreateAlzNetTxt():
     
     rootdir = envParamAlz().envlist['datadir']
+
     outfile = os.path.join(rootdir, "train_alzheimer_mri.dat")
 
     print "-- open train_alzheimer_mri.dat --"
@@ -34,7 +35,15 @@ def recreateAlzNetTxt():
         
     newdatalist = []
     newdir = os.path.join(rootdir,'alz_train_images')
-    reader = csv.reader(f,delimiter='\t')
+    
+    
+    if pl.system() == "Linux":
+        writer = csv.writer(f,lineterminator='\n',delimiter=' ')
+    else:
+        reader = csv.reader(f,delimiter='\t')
+
+
+
     for row in reader:
         filename = row[0]
         newdatalist.append([ os.path.join(newdir, filename), row[1] ] )
@@ -52,6 +61,42 @@ def recreateAlzNetTxt():
         writer = csv.writer(f,delimiter='\t')
         
     writer.writerows(newdatalist)
+    
+    
+    outfile = os.path.join(rootdir, "test_alzheimer_mri.dat")
+
+    print "-- open test_alzheimer_mri.dat --"
+    f = open(outfile,'r')
+        
+    newdatalist = []
+    newdir = os.path.join(rootdir,'alz_test_images')
+    
+    
+    if pl.system() == "Linux":
+        writer = csv.writer(f,lineterminator='\n',delimiter=' ')
+    else:
+        reader = csv.reader(f,delimiter='\t')
+
+
+
+    for row in reader:
+        filename = row[0]
+        newdatalist.append([ os.path.join(newdir, filename), row[1] ] )
+    
+    f.close()
+    
+    print "-- open test.txt under finetune "
+    newoutfile = os.path.join(rootdir, "finetune/test.txt")    
+    f = open(newoutfile,'wb')
+
+
+    if pl.system() == "Linux":
+        writer = csv.writer(f,lineterminator='\n',delimiter=' ')
+    else:
+        writer = csv.writer(f,delimiter='\t')
+        
+    writer.writerows(newdatalist)
+
 
 
 def untrained():
