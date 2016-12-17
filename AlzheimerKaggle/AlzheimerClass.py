@@ -48,7 +48,7 @@ class AlzheimerClass(object):
         self.N = None
         self.X = np.zeros((1,3,96,96))
         self.y = np.zeros(3)
-        
+        print "** AlzheimerClass init **"
         if read:
             print "--[AlzheimerClass]  alz data reading ......"
             self.images, self.validimages = self.readAlzClinicalData()
@@ -287,8 +287,8 @@ class AlzheimerClass(object):
         
         print "***** color mode -- 3 channel is used to save image ******"
         print "\n** step1 ** -- extracting randomly training data --\n"
-        n = np.random.permutation(l)
-        
+        #n = np.random.permutation(l)
+        n = np.arange(l)
         
         top5000 = n[:toprank]
 
@@ -406,8 +406,8 @@ class AlzheimerClass(object):
         alzvalid_images = self.validimages.copy()
         l, h, w = alzvalid_images.shape
         
-        n = np.random.permutation(l)
-         
+        #n = np.random.permutation(l)
+        n = np.arange(l) 
         #top5000 = n[:toprank]
 
         livedatas = int(l * (1-testsize))
