@@ -146,7 +146,7 @@ def predictionAfterTrained(alzFineCls):
 
 
     im,label = alzFineCls.untrained()
-    mindex = 2    
+    mindex = 1
     im = im[mindex]
     label = label[mindex]
 
@@ -155,7 +155,7 @@ def predictionAfterTrained(alzFineCls):
     alzFineCls.disp_imagenet_preds(imagenet_net,im)
 
     
-    weights = alzFineCls.env.envlist['datadir'] + '/finetune/weights.scratch_endToEnd.caffemodel'
+    weights = alzFineCls.env.envlist['datadir'] + '/finetune/weights.pretrained_endToEnd.caffemodel'
     
     test_net = alzFineCls.test_net(weights)
     alzFineCls.disp_alz_preds(test_net,im)
@@ -166,7 +166,7 @@ def predictionAfterTrained(alzFineCls):
 
 def main():
     
-    #recreateAlzNetTxt()
+    recreateAlzNetTxt()
     #proc1()
     #untrained()
     alzFineCls = AlzFineTuneClass()

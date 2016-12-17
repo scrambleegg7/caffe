@@ -7,11 +7,11 @@ net: "alz_lmdb_quick_train_test.prototxt"
 # covering the full 10,000 testing images.
 test_iter: 10
 # Carry out testing every 500 training iterations.
-test_interval: 500
+test_interval: 100
 # The base learning rate, momentum and the weight decay of the network.
 base_lr: 0.001
 momentum: 0.9
-weight_decay: 0.005
+weight_decay: 0.004
 # The learning rate policy
 lr_policy: "step"
 gamma : 0.1
@@ -24,5 +24,5 @@ max_iter: 2000
 snapshot: 500
 snapshot_prefix: "/home/hideaki/SynologyNFS/myProgram/pythonProj/KaggleData/Alzheimer/snapshot/alz_lmdb_quick_snapshot"
 # solver mode: CPU or GPU
-solver_mode: CPU
+solver_mode: GPU
 #device_id: 0

@@ -287,12 +287,18 @@ class AlzheimerClass(object):
         
         print "***** color mode -- 3 channel is used to save image ******"
         print "\n** step1 ** -- extracting randomly training data --\n"
-        n = np.random.permutation(l)
-        
+        #n = np.random.permutation(l)
+        n = np.arange(l)
         
         top5000 = n[:toprank]
 
-        livedatas = int(toprank * (1-testsize))
+        """
+        
+            pickup top ranking
+            
+        """
+
+        livedatas = int(toprank * 1)
         #split train and test size 
         train_idx = top5000[:livedatas]
         test_idx = top5000[livedatas:]
@@ -339,7 +345,7 @@ class AlzheimerClass(object):
         for idx,train in enumerate(X_):
             
             if idx % 1000 == 0:
-                print "-- %d images saved ..." % idx
+                print "-- %d images saved ... resized 227 " % idx
                 
             target = label_[idx]
             file_idx = train_idx[idx]
@@ -412,14 +418,15 @@ class AlzheimerClass(object):
         alzvalid_images = self.validimages.copy()
         l, h, w = alzvalid_images.shape
         
-        n = np.random.permutation(l)
-         
-        #top5000 = n[:toprank]
+        #n = np.random.permutation(l)
+        n = np.arange(l) 
+        top5000 = n[:toprank]
 
+        testsize = 0.0
         livedatas = int(l * (1-testsize))
         #split train and test size 
         #train_idx = top5000[:livedatas]
-        test_idx = n[:livedatas]
+        test_idx = top5000[:livedatas]
         
         print "-- extracted top %d randomly from valid image out of %d" % (len(test_idx), l)
         
@@ -442,7 +449,7 @@ class AlzheimerClass(object):
         for idx,train in enumerate(Xt_):
             
             if idx % 1000 == 0:
-                print "-- %d images saved ..." % idx
+                print "-- %d images saved  resize 227..." % idx
                 
             target = label_[idx]
             file_idx = test_idx[idx]
