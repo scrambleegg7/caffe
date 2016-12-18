@@ -31,7 +31,7 @@ def recreateAlzNetTxt():
         
     newdatalist = []
     newdir = os.path.join(rootdir,'alz_train_images')
-    reader = csv.reader(f,delimiter='\t')
+    reader = csv.reader(f,delimiter=' ')
     for row in reader:
         filename = row[0]
         newdatalist.append([ os.path.join(newdir, filename), row[1] ] )
@@ -42,7 +42,7 @@ def recreateAlzNetTxt():
     newoutfile = os.path.join(rootdir, "finetune/train.txt")    
     f = open(newoutfile,'w')
 
-    writer = csv.writer(f,delimiter='\t')
+    writer = csv.writer(f,delimiter=' ')
     writer.writerows(newdatalist)
     
     
@@ -53,7 +53,7 @@ def recreateAlzNetTxt():
         
     newdatalist = []
     newdir = os.path.join(rootdir,'alz_test_images')
-    reader = csv.reader(f,delimiter='\t')
+    reader = csv.reader(f,delimiter=' ')
     for row in reader:
         filename = row[0]
         newdatalist.append([ os.path.join(newdir, filename), row[1] ] )
@@ -64,7 +64,7 @@ def recreateAlzNetTxt():
     newoutfile = os.path.join(rootdir, "finetune/test.txt")    
     f = open(newoutfile,'w')
 
-    writer = csv.writer(f,delimiter='\t')
+    writer = csv.writer(f,delimiter=' ')
     writer.writerows(newdatalist)
     
     
