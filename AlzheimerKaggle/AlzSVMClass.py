@@ -42,14 +42,48 @@ class AlzSVMClass(AlzheimerClass):
         print images.shape,labels.shape
     
         collect_dict = collections.Counter(labels)
+        diag_keys = set(collect_dict.keys())
+
         
+        vlists = []
         for k,v in collect_dict.items():
             print k, v
+            vlists.append(v)
         
+        idx = np.argmin(vlists)
+        min_number = collect_dict[idx+1.]
+        
+        print "-- minimum counts of label --" , min_number
+
+        mask_1 = labels == 1.
+        labels_1 = labels[mask_1][:min_number]
+        labels_23 = labels[~mask_1]
+        
+        labels = np.hstack( ( labels_1,labels_23 ) )
+        print "-- new labels size", labels.shape
+
+        images_1 = images[mask_1][:min_number]
+        images_23 = images[~mask_1]
+
+        images = np.vstack( ( images_1,images_23 ) )
+        print "-- new images size", images.shape
+
         X_train, X_test, y_train, y_test = train_test_split(
-            images, labels, test_size=0.3, random_state=0)
+            images, labels, test_size=0.5, random_state=0)
+        
+        collect_dict = collections.Counter(y_train)
+        vlists = []
+        for k,v in collect_dict.items():
+            print " -- after shuffling : ", k, v
+            vlists.append(v)
 
-
+        """
+         use tricky logic to have equal balance each labels 
+         for best practices of learning....
+        """        
+        
+        
+        
         classifier = svm.SVC(gamma=0.001)
 
         # We learn the digits on the first half of the digits
@@ -61,10 +95,13 @@ class AlzSVMClass(AlzheimerClass):
         y_pred = classifier.predict(X_test)
         
         
-        # Compute confusion matrix
-        cnf_matrix = confusion_matrix(y_test, y_pred)
+        print y_pred
+        print y_test
         
-        self.plot_confusion_matrix(cnf_matrix, y_test)
+        # Compute confusion matrix
+        #cnf_matrix = confusion_matrix(y_test, y_pred)
+        
+        #self.plot_confusion_matrix(cnf_matrix, y_test)
         
         #print np.sum(predict_ == y_train) / np.float(len(X_train))
     def plot_confusion_matrix(self,cm, classes,
@@ -111,7 +148,7 @@ def main():
     myenv = envParamAlz()
     
     alzSvmCls = AlzSVMClass(myenv,True,True)
-    alzSvmCls.pickupImages(3100)
+    alzSvmCls.pickupImages()
 
 
 if __name__ == "__main__":

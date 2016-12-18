@@ -26,7 +26,7 @@ def proc1():
     #
     print "-- making Alzheimer image data [ proc1 ]........."    
 #    AlzCls.makeH5Data(20000)
-    AlzCls.makeImagelistFile(40000,0.3,3)
+    AlzCls.makeImagelistFile(10000,0.3,3)
     #AlzCls.makeImagelistFile3ch(100,0.3,3)
 
     print "-- flatfile done........."

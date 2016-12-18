@@ -121,8 +121,8 @@ def main():
     recreateAlzNetTxt()
     #proc1()
     #untrained()
-    #alzFineCls = AlzFineTuneClass()
-    #prediction(alzFineCls)
+    alzFineCls = AlzFineTuneClass()
+    prediction(alzFineCls)
 
 
 
