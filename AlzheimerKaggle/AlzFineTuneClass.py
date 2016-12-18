@@ -208,7 +208,7 @@ class AlzFineTuneClass(object):
         #transform_param = dict(mirror=train, crop_size=96,mean_file= mean_file)
         
         style_data, style_label = L.ImageData(
-            transform_param=transform_param, source=source,
+            transform_param=transform_param, source=source,   #shuffle=True,
             batch_size=62, new_height=256, new_width=256, ntop=2)
         
         # num style is changed to 3
@@ -284,7 +284,7 @@ class AlzFineTuneClass(object):
         probs = net.forward(start='conv1')['probs'][0]
         top_k = (-probs).argsort()[:k]
         print 'top %d predicted %s labels =' % (k, name)
-        print '\n'.join('\t(%d) %5.2f%% %s' % (i+1, 100*probs[p], labels[p])
+        print '\n'.join('\t(%d) %5.2f%% %s' % (i, 100*probs[p], labels[p])
                     for i, p in enumerate(top_k))
 
     def disp_imagenet_preds(self,net,image):

@@ -143,7 +143,7 @@ class AlzSolverClass(AlzBaseClass):
     
     def stepRunSolver(self):
 
-        train_path = self.alzFinetuneCls.alz_net(train=True,filename="fulltrain.prototxt")
+        train_path = self.alzFinetuneCls.alz_net(train=True,filename="train_not_learn.prototxt")
         weights = self.alzFinetuneCls.getBvlcRefWeights()
 
         sfilename = "solver.prototxt"
@@ -177,7 +177,7 @@ class AlzSolverClass(AlzBaseClass):
     
     def eval_alzNet_acc(self):
 
-        train_path = self.alzFinetuneCls.alz_net(train=False,filename="non_train.prototxt")
+        train_path = self.alzFinetuneCls.alz_net(train=False,filename="test.prototxt")
         
         
         weightslist = [ 'pretrained',  'scratch' ]
@@ -199,9 +199,12 @@ class AlzSolverClass(AlzBaseClass):
     
             
             print "weightname:%s  accuracy: %.4f" % (name,accuracy) 
+    
+    def train_learn_all(self):
 
+        train_path = self.alzFinetuneCls.alz_net(train=True,learn_all=True,filename="train_learn_all.prototxt")
 
-        
+        return train_path
         
         
         
