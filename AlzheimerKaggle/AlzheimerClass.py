@@ -14,6 +14,8 @@
     
 """
 
+import collections
+
 import numpy as np
 import os
 import cv2
@@ -21,7 +23,7 @@ import pandas as pd
 import csv
 import shutil
 
-from sklearn.cross_validation import train_test_split
+#from sklearn.cross_validation import train_test_split
 from sklearn.preprocessing import LabelBinarizer
 
 from caffeBase.envParam import envParamAlz
@@ -48,7 +50,7 @@ class AlzheimerClass(object):
         self.N = None
         self.X = np.zeros((1,3,96,96))
         self.y = np.zeros(3)
-        
+        print "** AlzheimerClass init **"
         if read:
             print "--[AlzheimerClass]  alz data reading ......"
             self.images, self.validimages = self.readAlzClinicalData()
@@ -97,19 +99,19 @@ class AlzheimerClass(object):
         trY_all = []
         for n in trY_diagnosis:
             for i in range(images_per_sub):
-                trY_all.append(n)
+                trY_all.append(n-1)
 
         trY_all = np.asarray(trY_all)
     
         vaY_all = []
         for n in vaY_diagnosis:
             for i in range(images_per_sub):
-                vaY_all.append(n)
+                vaY_all.append(n-1)
         
         vaY_all = np.asarray(vaY_all)
         
-        print "-- training target :", trY_all,   len(trY_all), list(set(trY_all))
-        print "-- validation target :", vaY_all, len(vaY_all), list(set(vaY_all))
+        print "-- training target :", trY_all[:126],   len(trY_all), list(set(trY_all))
+        print "-- validation target :", vaY_all[:126], len(vaY_all), list(set(vaY_all))
         
         """        
         trY_targets = np.zeros((len(trY_all), 3))
@@ -226,7 +228,17 @@ class AlzheimerClass(object):
         
         #label = np.array(genders)
         label = self.labels[top5000]
-        X_, Xt_, label_, labelt_= train_test_split(X, label, test_size=test_size, random_state=42)
+        
+        data_length = len(self.labels)
+        train_size = data_length * (1 - .3)
+        test_size = data_length *  .3
+        
+        X_ = X[:train_size]
+        Xt_ = X[train_size:]
+        label_ = label[:train_size]
+        labelt_ = label[train_size:]        
+        
+        #X_, Xt_, label_, labelt_= train_test_split(X, label, test_size=test_size, random_state=42)
         print "-- shape of training data: ",X_.shape,label_.shape
         if test_size > 0.0:        
             print "-- shape of test data: ",Xt_.shape,labelt_.shape
@@ -280,9 +292,65 @@ class AlzheimerClass(object):
         print "** file saved on ..", output_file
 
 
+    def labelcheck(self,labels):
+        
+        
+        collect_dict = collections.Counter(labels)
+        
+        vlists = []
+        for k,v in collect_dict.items():
+            print "lables  and ccounter: ",  k, v
+            vlists.append(v)
+        
+        idx = np.argmin(vlists)
+        min_number = collect_dict[idx]
+        
+        print "-- minimum counts of label --" , min_number
+
+        # there are many NORMALs .....
+        mask_1 = labels == 0.
+
+        """
+            ref. logic ......
+            label = array([1, 1, 2, 0, 1, 2, 2, 1, 0, 1)
+            mask = lebel == 0
+            mask_length = len(mask)
+            mask_index_number  =  np.arange(mask_length)[mask]
+            mask_index_number = mask_index_number[:limited_minimum_number]
+             ..........
+            
+        """
+        label1_index_num = np.arange(len(mask_1))[mask_1]
+        label1_index_num_min = label1_index_num[:min_number]
+        label23_index_num = np.arange(len(mask_1))[~mask_1]        
+        
+        shrink_index = np.hstack( (label1_index_num_min,label23_index_num  ) )        
+                
+        
+        return shrink_index
+        
+
     def makeImagelistFile(self,toprank=10000,testsize=0.3,channel=1):
         
         alzimages = self.images.copy()
+        label_ = self.labels.copy()
+
+        alzimages = alzimages[:toprank,:,:]
+        label_ = label_[:toprank]
+
+        """
+        to have equal weights on each labels,
+        many types (1) is eliminated.
+        """
+        shrink_index = self.labelcheck(label_)
+
+        train_index = np.random.permutation(shrink_index)
+
+        alzimages = alzimages[train_index]
+        print "-- new images size", alzimages.shape        
+        label_ = label_[train_index]
+        print "-- new labels size", label_.shape
+        
         l, h, w = alzimages.shape
         
         print "***** color mode -- 3 channel is used to save image ******"
@@ -290,7 +358,7 @@ class AlzheimerClass(object):
         #n = np.random.permutation(l)
         n = np.arange(l)
         
-        top5000 = n[:toprank]
+        #top5000 = n[:toprank]
 
         """
         
@@ -300,13 +368,13 @@ class AlzheimerClass(object):
 
         livedatas = int(toprank * 1)
         #split train and test size 
-        train_idx = top5000[:livedatas]
-        test_idx = top5000[livedatas:]
+        #train_idx = top5000[:livedatas]
+        #test_idx = top5000[livedatas:]
 
-        print ".. training  size .. %d " % len(train_idx)
+        print ".. new training  size .. %d " % l
 
         #X = alzimages[top5000,:,:]
-        X_ = alzimages[train_idx,:,:]
+        X_ = alzimages
         
         for n,myimage in enumerate(X_):
             #im = plt.imread(f)
@@ -317,7 +385,6 @@ class AlzheimerClass(object):
             X_[n] = myimage            
         
         #label = self.labels[top5000]
-        label_ = self.labels[train_idx]
         
         #X_, Xt_, label_, labelt_= train_test_split(X, label, test_size=testsize, random_state=42)
         #X_ = X.copy()
@@ -342,14 +409,15 @@ class AlzheimerClass(object):
                 
         print "-- %d training imagefiles are deleted from %s" % (len(filelists),cropdir)
         
-        for idx,train in enumerate(X_):
+        #for idx,train in enumerate(X_):
+        for counter, (train,target) in enumerate( zip(X_,label_) ):
+
             
-            if idx % 1000 == 0:
-                print "-- %d images saved ... resized 227 " % idx
+            if counter % 1000 == 0:
+                print "-- %d images saved ..." % counter
                 
-            target = label_[idx]
-            file_idx = train_idx[idx]
-            filename = "ALZ_" + str(file_idx) + ".jpg"
+            #file_idx = idx
+            filename = "ALZ_" + str(train_index[counter]) + ".jpg"
             training.append([  filename  , int(target)  ]  )
                         
             output_file = os.path.join(cropdir,filename)
@@ -376,7 +444,7 @@ class AlzheimerClass(object):
       
             cv2.imwrite(output_file, train_)
             
-        print "-- all %d training images has been saved....." % (idx+1)
+        print "-- all %d training images has been saved....." % (counter+1)
         print "-- writing time (for your ref.)  :  %.4f sec.... " % (time() - t0)
 
         rootdir = self.env.envlist['datadir']
@@ -413,25 +481,31 @@ class AlzheimerClass(object):
                 except OSError:
                     pass            
         print "-- %d testing (valid) files have been deleted from %s" % (len(filelists),cropdir)
-        
 
         alzvalid_images = self.validimages.copy()
+        label_ = self.valid_labels.copy()
+
+        alzvalid_images = alzvalid_images[:toprank,:,:]
+        label_ = label_[:toprank]
+                
+        """
+        to have equal weights on each labels,
+        many types (1) is eliminated.
+        """
+        shrink_index = self.labelcheck(label_)
+
+        test_index = np.random.permutation(shrink_index)
+        
+        alzvalid_images = alzvalid_images[test_index,:,:]
+        label_ = label_[test_index]
+        
         l, h, w = alzvalid_images.shape
-        
         #n = np.random.permutation(l)
-        n = np.arange(l) 
-        top5000 = n[:toprank]
-
-        testsize = 0.0
-        livedatas = int(l * (1-testsize))
-        #split train and test size 
-        #train_idx = top5000[:livedatas]
-        test_idx = top5000[:livedatas]
+        #test_idx = np.arange(l) 
         
-        print "-- extracted top %d randomly from valid image out of %d" % (len(test_idx), l)
-        
+        print "-- extracted top %d randomly from valid image out of %d" % (len(test_index), l)
 
-        Xt_ = alzvalid_images[test_idx,:,:]
+        Xt_ = alzvalid_images
         print "--Xt length : ", Xt_.shape[0]
         
         for n,myimage in enumerate(Xt_):
@@ -441,19 +515,16 @@ class AlzheimerClass(object):
             # normalized with 255
             myimage *= 255.0/myimage.max()     
             Xt_[n] = myimage            
-        
-        #label = self.labels[top5000]
-        label_ = self.valid_labels[test_idx]
-        print "--label length : ", len(label_)
+
+        print "-- test label length : ", len(label_)
     
-        for idx,train in enumerate(Xt_):
+        for counter,(train,target) in enumerate( zip(Xt_,label_)):
             
-            if idx % 1000 == 0:
-                print "-- %d images saved  resize 227..." % idx
-                
-            target = label_[idx]
-            file_idx = test_idx[idx]
-            filename = "ALZ_" + str(file_idx) + ".jpg"
+            if counter % 1000 == 0:
+                print "-- %d images saved ..." % counter
+            
+            #file_idx = test_idx[idx]
+            filename = "ALZ_" + str(test_index[counter]) + ".jpg"
             training.append([  filename  , int(target)  ]  )
                         
             output_file = os.path.join(cropdir,filename)
@@ -475,7 +546,7 @@ class AlzheimerClass(object):
             train_ = cv2.resize(train,size_)      
             cv2.imwrite(output_file, train_)
             
-        print "-- all %d test (valid) images has been saved....." % (idx+1)
+        print "-- all %d test (valid) images has been saved....." % (counter+1)
         print "-- writing time :  %.4f sec.... " % (time() - t0)
 
         rootdir = self.env.envlist['datadir']
@@ -522,7 +593,17 @@ class AlzheimerClass(object):
         print "-- label size ....", len(self.labels)        
         #label = np.array(genders)
         label = self.labels[top5000]
-        X_, Xt_, label_, labelt_= train_test_split(X, label, test_size=0.3, random_state=42)
+        
+        data_length = len(self.labels)
+        train_size = data_length * (1 - .3)
+        test_size = data_length *  .3
+        
+        X_ = X[:train_size]
+        Xt_ = X[train_size:]
+        label_ = label[:train_size]
+        labelt_ = label[train_size:]        
+        
+        #X_, Xt_, label_, labelt_= train_test_split(X, label, test_size=0.3, random_state=42)
         print "** shape of training data from top 5000: ",X_.shape,label_.shape
                 
         print "--- writing train h5 db ......"

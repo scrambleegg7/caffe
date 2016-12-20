@@ -75,8 +75,6 @@ def recreateAlzNetTxt():
     else:
         reader = csv.reader(f,delimiter='\t')
 
-
-
     for row in reader:
         filename = row[0]
         newdatalist.append([ os.path.join(newdir, filename), row[1] ] )
@@ -86,7 +84,6 @@ def recreateAlzNetTxt():
     print "-- open test.txt under finetune "
     newoutfile = os.path.join(rootdir, "finetune/test.txt")    
     f = open(newoutfile,'wb')
-
 
     if pl.system() == "Linux":
         writer = csv.writer(f,lineterminator='\n',delimiter=' ')

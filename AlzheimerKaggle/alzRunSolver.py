@@ -11,13 +11,25 @@ def proc1():
     alzSolverCls.endToEndSolver()
 
 
+def eval_acc():
+    
+
+    alzSolverCls = AlzSolverClass(test=True)
+    alzSolverCls.eval_alzNet_acc()
 
 
+def train_learn_all():
+
+    alzSolverCls = AlzSolverClass(test=True)
+    alzSolverCls.train_learn_all()
+    
+    
 def main():
     
+    #proc1()
+    #eval_acc()
     
-    
-    proc1()
+    train_learn_all()
     
     
 if __name__ == "__main__":

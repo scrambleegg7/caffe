@@ -1,28 +1,44 @@
 name: "Alznet"
 layer {
   name: "Alz"
-  type: "HDF5Data"
+  # type: "HDF5Data"
+  type: "ImageData"
   top: "data"
   top: "label"
   include {
     phase: TRAIN
   }
-  hdf5_data_param {
-    source: "train.txt"
-    batch_size: 10
+  transform_param {
+    mirror: true
+    crop_size: 227
+    mean_file: "/Users/donchan/caffe/caffe-public/data/ilsvrc12/imagenet_mean.binaryproto"
+  }
+  image_data_param {
+    source: "/Users/donchan/Documents/myData/KaggleData/Alzheimer/finetune/train.txt"
+    batch_size: 62
+    new_height: 256
+    new_width: 256
   }
 }
 layer {
   name: "Alz"
-  type: "HDF5Data"
+  #type: "HDF5Data"
+  type: "ImageData"
   top: "data"
   top: "label"
   include {
     phase: TEST
   }
-  hdf5_data_param {
-    source: "test.txt"
-    batch_size: 10
+  transform_param {
+    mirror: true
+    crop_size: 227
+    mean_file: "/Users/donchan/caffe/caffe-public/data/ilsvrc12/imagenet_mean.binaryproto"
+  }
+  image_data_param {
+    source: "/Users/donchan/Documents/myData/KaggleData/Alzheimer/finetune/test.txt"
+    batch_size: 62
+    new_height: 256
+    new_width: 256
   }
 }
 layer {
@@ -126,10 +142,10 @@ layer {
   bottom: "ip1"
   top: "ip2"
   param {
-    lr_mult: 1
+    lr_mult: 10
   }
   param {
-    lr_mult: 2
+    lr_mult: 20
   }
   inner_product_param {
     num_output: 3
@@ -149,4 +165,11 @@ layer {
   bottom: "ip2"
   bottom: "label"
   top: "loss"
+}
+layer {
+  name: "acc"
+  type: "Accuracy"
+  bottom: "ip2"
+  bottom: "label"
+  top: "acc"
 }
